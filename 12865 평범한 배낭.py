@@ -1,26 +1,22 @@
-#12865
+import sys
 
-"""
-첫 줄에 물품의 수 N(1 ≤ N ≤ 100)과 준서가 버틸 수 있는 무게 K(1 ≤ K ≤ 100,000)
-두 번째 줄부터 N개의 줄에 거쳐 각 물건의 무게 W(1 ≤ W ≤ 100,000)와
-해당 물건의 가치 V(0 ≤ V ≤ 1,000)가 주어진다.
+N, K = map(int, input().split())
+stuff = [[0,0]]
+knapsack = [[0 for _ in range(K + 1)] for _ in range(N + 1)]
 
-"""
-weight = []
-value = []
-N, K = map(int,input().split())
-for n in range(N):
-    W, V = map(int,input().split())
-    weight.append(W)
-    value.append(V)
+for _ in range(N):
+    stuff.append(list(map(int, input().split())))
 
-maxValue = 0
 
-for i in range(N):
-    for j in range(N):
-        if i == j:
-            if weight[i] <= K and maxValue < value[i]:
-                maxValue = value[i]
-        elif weight[i] + weight[j] <= K and maxValue < value[i] + value[j]:
-            maxValue = value[i] + value[j]
-print(maxValue)
+#냅색 문제 풀이
+for i in range(1, N + 1):
+    for j in range(1, K + 1):
+        weight = stuff[i][0] 
+        value = stuff[i][1]
+       
+        if j < weight:
+            knapsack[i][j] = knapsack[i - 1][j] #weight보다 작으면 위의 값을 그대로 가져온다
+        else:
+            knapsack[i][j] = max(value + knapsack[i - 1][j - weight], knapsack[i - 1][j])
+
+print(knapsack[N][K])
